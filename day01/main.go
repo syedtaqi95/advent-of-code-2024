@@ -4,17 +4,13 @@ import (
 	_ "embed"
 	"flag"
 	"fmt"
+	"strings"
 )
 
 // Embed input.txt within the binary as a string
+
 //go:embed input.txt
 var input_text string
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
 
 func main() {
 	// Parse command line inputs
@@ -34,7 +30,26 @@ func main() {
 }
 
 func part1(input_text string) int {
-	return 1
+	// Split the input text into lines
+	// Split each line to get the integers
+	var ans int
+	for _, line := range strings.Split(input_text, "\n") {
+		if line == "" {
+			continue
+		}
+
+		var num1, num2 int
+		if _, err := fmt.Sscanf(line, "%d %d", &num1, &num2); err == nil {
+			diff := num1 - num2
+			if diff < 0 {
+				diff = -diff
+			}
+
+			ans += diff
+		}
+	}
+
+	return ans
 }
 
 func part2(input_text string) int {
