@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"flag"
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -32,7 +33,8 @@ func main() {
 func part1(input_text string) int {
 	// Split the input text into lines
 	// Split each line to get the integers
-	var ans int
+	var first_nums []int
+	var second_nums []int
 	for _, line := range strings.Split(input_text, "\n") {
 		if line == "" {
 			continue
@@ -40,13 +42,23 @@ func part1(input_text string) int {
 
 		var num1, num2 int
 		if _, err := fmt.Sscanf(line, "%d %d", &num1, &num2); err == nil {
-			diff := num1 - num2
-			if diff < 0 {
-				diff = -diff
-			}
-
-			ans += diff
+			first_nums = append(first_nums, num1)
+			second_nums = append(second_nums, num2)
 		}
+	}
+
+	// Sort both in ascending order
+	sort.Ints(first_nums)
+	sort.Ints(second_nums)
+
+	var ans int
+	for i := 0; i < len(first_nums); i++ {
+		diff := first_nums[i] - second_nums[i]
+		if diff < 0 {
+			diff = -diff
+		}
+
+		ans += diff
 	}
 
 	return ans
