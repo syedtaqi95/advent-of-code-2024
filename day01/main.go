@@ -11,49 +11,53 @@ import (
 // Embed input.txt within the binary as a string
 
 //go:embed input.txt
-var input_text string
+var inputText string
 
 func main() {
 	// Parse command line inputs
-	var part int
-	flag.IntVar(&part, "part", 1, "part '1' or '2'")
+	part := flag.Int("part", 1, "part '1' or '2'")
 	flag.Parse()
-	fmt.Println("Running part", part)
+	fmt.Println("Running part", *part)
 
 	// Run the selected part and print the answer
 	var ans int
-	if part == 1 {
-		ans = part1(input_text)
-	} else {
-		ans = part2(input_text)
+	switch *part {
+	case 1:
+		ans = part1(inputText)
+	case 2:
+		ans = part2(inputText)
+	default:
+		fmt.Println("invalid part")
+		return
 	}
 	fmt.Println("Output:", ans)
 }
 
-func part1(input_text string) int {
-	// Split the input text into lines
-	// Split each line to get the integers
-	var first_nums []int
-	var second_nums []int
-	for _, line := range strings.Split(input_text, "\n") {
+func part1(inputText string) int {
+	// Parse the input text to get the integers
+	var firstNums []int
+	var secondNums []int
+	for _, line := range strings.Split(inputText, "\n") {
 		if line == "" {
 			continue
 		}
 
 		var num1, num2 int
 		if _, err := fmt.Sscanf(line, "%d %d", &num1, &num2); err == nil {
-			first_nums = append(first_nums, num1)
-			second_nums = append(second_nums, num2)
+			firstNums = append(firstNums, num1)
+			secondNums = append(secondNums, num2)
 		}
 	}
 
 	// Sort both in ascending order
-	sort.Ints(first_nums)
-	sort.Ints(second_nums)
+	sort.Ints(firstNums)
+	sort.Ints(secondNums)
 
+	// Add the diffs between the two arrays
 	var ans int
-	for i := 0; i < len(first_nums); i++ {
-		diff := first_nums[i] - second_nums[i]
+	for i, first := range firstNums {
+		second := secondNums[i]
+		diff := first - second
 		if diff < 0 {
 			diff = -diff
 		}
