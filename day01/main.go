@@ -69,5 +69,32 @@ func part1(inputText string) int {
 }
 
 func part2(input_text string) int {
-	return 2
+	// Parse the input text to get the integers
+	var firstNums []int
+	var secondNums []int
+	for _, line := range strings.Split(inputText, "\n") {
+		if line == "" {
+			continue
+		}
+
+		var num1, num2 int
+		if _, err := fmt.Sscanf(line, "%d %d", &num1, &num2); err == nil {
+			firstNums = append(firstNums, num1)
+			secondNums = append(secondNums, num2)
+		}
+	}
+
+	// Count the occurrences of each number in secondNums
+	counts := make(map[int]int)
+	for _, num := range secondNums {
+		counts[num] += 1
+	}
+
+	var ans int
+	for _, first := range firstNums {
+		similarity := first * counts[first]
+		ans += similarity
+	}
+
+	return ans
 }
